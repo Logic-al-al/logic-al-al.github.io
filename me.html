@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简介 - Logic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translate3d(-100%, 0, 0);
+            }
+        
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        
+        body {
+            margin: 0;
+            background:linear-gradient(
+                        to left,
+                        rgb(50, 143, 230),
+                        rgb(39, 189, 114)) ;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* 页面整体不可滚动 */
+            padding: 20px;
+        }
+        
+        .resume-container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            max-height: 800px;
+            animation-duration: 1s;
+            animation-fill-mode: both;
+            animation-name: fadeInLeft;
+            background: rgba( 255, 255, 255, 0.2 );
+            box-shadow: 0 8px 32px 0 rgba( 0, 0, 0, 0.37 );
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        
+        .resume-container:hover {
+            backdrop-filter: blur(11px);
+            box-shadow: 0 8px 39px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        /* 左侧固定栏样式 */
+        .sidebar {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto; /* 左侧栏内部可滚动 */
+        }
+        
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 25px;
+            transition: 0.7s;
+        }
+        
+        .resume-container:hover .profile-img {
+            transform: rotate(360deg);
+        }
+        
+        .profile-img:hover {
+            transform: rotate(360deg);
+        }
+        
+        .name {
+            font-size: 28px;
+            font-weight: 300;
+            color: white;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .contact-info {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .contact-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: white;
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            width: 100%;
+            font-weight: 300;
+        }
+        
+
+        /* 确保教育部分完全左对齐 */
+        .education-item {
+        margin-bottom: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        width: 100%; /* 添加这行确保宽度100% */
+        text-align: left; /* 添加这行确保文本左对齐 */
+        }
+        .education-degree {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .education-school {
+            font-size: 14px;
+            margin: 3px 0;
+        }
+        
+        .education-year {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* 右侧内容区样式 */
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto; /* 右侧内容区可滚动 */
+            background: rgba(255, 255, 255, 0.85);
+        }
+        
+        .content-section {
+            margin-bottom: 40px;
+        }
+        
+        .content-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            font-weight: 300;
+        }
+        
+        .content-title i {
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #333;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #333;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .timeline-date {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .timeline-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .timeline-subtitle {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .timeline-description {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .skill-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 12px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .skill-item:hover {
+            transform: translateY(-3px);
+            background-color: black;
+            color: white;
+        }
+        
+        .skill-icon {
+            margin-right: 8px;
+        }
+        
+        .awards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .award-card {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .award-card:hover {
+            transform: translateY(-5px);
+            background-color: black;
+            color: white;
+        }
+        
+        .award-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .award-card:hover .award-title {
+            color: white;
+        }
+        
+        .award-org {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        .award-card:hover .award-org {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .award-year {
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .award-card:hover .award-year {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .resume-container {
+                flex-direction: column;
+                height: auto;
+                max-height: 90vh;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 25px;
+                max-height: 40vh;
+            }
+            
+            .main-content {
+                padding: 25px;
+                max-height: 50vh;
+            }
+        }
+        
+        @media (max-width: 800px) {
+            .resume-container {
+                box-shadow: 0 8px 39px 0 rgba(0, 0, 0, 0.37)!important;
+                margin-top: 12%!important;
+                margin-left: 5%!important;
+                margin-right: 5%!important;
+            }
+            
+            .awards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <!-- 左侧固定栏 -->
+        <div class="sidebar">
+            <img src="source/img/figure.jpg" alt="个人照片" class="profile-img">
+            <h1 class="name">罗泽婷</h1>
+            <p class="title">北京大学信息科学技术学院在读本科生</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <span>2400013131@stu.pku.edu.cn</span>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <span>广东潮汕-->北京海淀</span>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <span>github.com/Logic-al-al</span>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Education</h2>
+            <div class="education-item">
+                <div class="education-degree">智能科学与技术</div>
+                <div class="education-school">北京大学</div>
+                <div class="education-year">2024 - </div>
+            </div>
+            <div class="education-item">
+                <div class="education-school">肇庆市龙涛外国语学校 高中</div>
+                <div class="education-year">2023 - 2024</div>
+            </div>
+            <div class="education-item">
+                <div class="education-school">汕头市潮阳实验学校 高中</div>
+                <div class="education-year">2020 - 2023</div>
+            </div>
+<!-- 
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-container">
+                <div class="skill-item">
+                    <i class="fab fa-js skill-icon"></i>
+                    <span>JavaScript/TypeScript</span>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-react skill-icon"></i>
+                    <span>React/Vue.js</span>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-node-js skill-icon"></i>
+                    <span>Node.js/Express</span>
+                </div>
+                <div class="skill-item">
+                    <i class="fas fa-database skill-icon"></i>
+                    <span>MySQL/MongoDB</span>
+                </div>
+            </div> -->
+        </div>
+        
+        <!-- 右侧内容区 -->
+        <div class="main-content">
+            <div class="content-section">
+                <h2 class="content-title"><i class="fas fa-briefcase"></i> Services</h2>
+                <div class="timeline">
+                    <!-- <div class="timeline-item">
+                        <div class="timeline-date">2021年6月 - 至今</div>
+                        <h3 class="timeline-title">高级全栈工程师</h3>
+                        <div class="timeline-subtitle">字节跳动 · 北京</div>
+                        <p class="timeline-description">
+                            负责核心业务系统的前后端开发，主导了多个重要项目的技术架构设计和实现。
+                            使用React+TypeScript构建高性能前端应用，Node.js+MySQL开发后端服务。
+                            带领5人团队完成从0到1的产品开发，系统上线后用户量增长300%。
+                        </p>
+                    </div> -->
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">25-26学年度智学会会长</h3>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <h2 class="content-title"><i class="fas fa-trophy"></i> Awards</h2>
+                <div class="awards-container">
+                    <div class="award-card">
+                        <h3 class="award-title">九坤杯三等奖</h3>
+                        <div class="award-org">北京大学 · 2025年</div>
+                        <!-- <div class="award-year">年度技术贡献突出，获得公司表彰</div> -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-section">
+                <h2 class="content-title"><i class="fas fa-project-diagram"></i> This is me</h2>
+                <div class="timeline">
+                    <!-- <div class="timeline-item">
+                        <div class="timeline-date">2022年</div>
+                        <h3 class="timeline-title">企业级低代码平台</h3>
+                        <div class="timeline-subtitle">技术负责人</div>
+                        <p class="timeline-description">
+                            主导设计并实现了一个企业级低代码开发平台，支持可视化拖拽构建应用。
+                            平台上线后，内部业务系统开发效率提升60%，减少代码编写量70%。
+                            技术栈：React + TypeScript + Node.js + MongoDB。
+                        </p>
+                    </div> -->
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">摄影</h3>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">码字</h3>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">手语</h3>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">志愿</h3>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">聊天</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加滚动动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const awardCards = document.querySelectorAll('.award-card');
+            const skillItems = document.querySelectorAll('.skill-item');
+            
+            // 初始隐藏元素
+            timelineItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+            });
+            
+            awardCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+            });
+            
+            skillItems.forEach(skill => {
+                skill.style.opacity = '0';
+                skill.style.transform = 'translateY(20px)';
+            });
+            
+            // 滚动时显示元素
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateX(0)';
+                        
+                        // 为奖项卡片添加延迟效果
+                        if (entry.target.classList.contains('award-card')) {
+                            const index = Array.from(awardCards).indexOf(entry.target);
+                            entry.target.style.transitionDelay = `${index * 0.1}s`;
+                        }
+                        
+                        // 为技能项添加延迟效果
+                        if (entry.target.classList.contains('skill-item')) {
+                            const index = Array.from(skillItems).indexOf(entry.target);
+                            entry.target.style.transitionDelay = `${index * 0.1}s`;
+                        }
+                    }
+                });
+            }, observerOptions);
+            
+            timelineItems.forEach(item => observer.observe(item));
+            awardCards.forEach(card => observer.observe(card));
+            skillItems.forEach(skill => observer.observe(skill));
+        });
+        
+        // 禁止右键菜单和选择文本
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+    </script>
+</body>
+</html>

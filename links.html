@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联结 - Logic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translate3d(-100%, 0, 0);
+            }
+        
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        
+        body {
+            margin: 0;
+            background:linear-gradient(
+                        to left,
+                        rgb(50, 143, 230),
+                        rgb(39, 189, 114)) ;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .links-container {
+            width: 90%;
+            max-width: 800px; /* 减小最大宽度以适应两列布局 */
+            animation-duration: 1s;
+            animation-fill-mode: both;
+            animation-name: fadeInLeft;
+            background: rgba( 255, 255, 255, 0.2 );
+            box-shadow: 0 8px 32px 0 rgba( 0, 0, 0, 0.37 );
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+            padding: 30px;
+        }
+        
+        .links-container:hover {
+            backdrop-filter: blur(11px);
+            box-shadow: 0 8px 39px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-right: 20px;
+            transition: 0.3s;
+        }
+        
+        .back-btn:hover {
+            transform: translateX(-5px);
+        }
+        
+        .back-btn i {
+            margin-right: 8px;
+        }
+        
+        .header-title {
+            font-size: 24px;
+            font-weight: 300;
+            color: white;
+        }
+        
+        .links-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            font-weight: 300;
+        }
+        
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 固定为两列 */
+            gap: 20px;
+        }
+        
+        .link-card {
+            background: rgba(255, 255, 255, 0.85); /* 增加背景不透明度 */
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .link-card:hover {
+            background: rgba(255, 255, 255, 0.95); /* 悬停时更不透明 */
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .link-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333; /* 改为黑色 */
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .link-title-text {
+            flex: 1;
+        }
+        
+        .link-icon {
+            margin-left: 8px;
+            font-size: 14px;
+            opacity: 0.7;
+            color: #333; /* 改为黑色 */
+        }
+        
+        .link-description {
+            font-size: 14px;
+            color: #555; /* 改为深灰色 */
+            line-height: 1.5;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 800px) {
+            .links-container {
+                box-shadow: 0 8px 39px 0 rgba(0, 0, 0, 0.37)!important;
+                padding: 20px;
+            }
+            
+            .links-grid {
+                grid-template-columns: 1fr; /* 在较小屏幕上变为单列 */
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .header-title {
+                font-size: 20px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+        }
+        
+        /* 空状态样式 */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+        }
+        
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="links-container">
+        <div class="header">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+            <h1 class="header-title">Links</h1>
+        </div>
+        
+        <!-- 组织链接部分 -->
+        <div class="links-section">
+            <h2 class="section-title">Organizations</h2>
+            <div class="links-grid" id="organizationsList">
+                <!-- 组织链接将通过JavaScript动态加载 -->
+            </div>
+        </div>
+        
+        <!-- 朋友链接部分 -->
+        <div class="links-section">
+            <h2 class="section-title">Friends</h2>
+            <div class="links-grid" id="friendsList">
+                <!-- 朋友链接将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 组织链接数据
+        const organizations = [
+            {
+                title: "北京大学",
+                url: "https://www.pku.edu.cn",
+                description: "思想 自由 兼容 并包"
+            },
+            {
+                title: "智班",
+                url: "https://zhi-class.ai",
+                description: "智怀天下、能为人先"
+            }
+        ];
+
+        // 朋友链接数据
+        const friends = [
+            {
+                title: "Trpuppy",
+                url: "https://zhangsan.example.com",
+                description: "他说他叫TRpuppy"
+            },
+            {
+                title: "Nicheeeee",
+                url: "https://nicheeeee.github.io/",
+                description: "超高N值"
+            },
+            {
+                title: "Coco",
+                url: "https://coco.github.io/",
+                description: "我们欣悦姐姐"
+            },
+            {
+                title: "Jiang",
+                url: "https://jiang.github.io/",
+                description: "原来中山比潮汕更南"
+            }
+        ];
+
+        // 动态生成链接卡片
+        function renderLinkCards(containerId, links) {
+            const container = document.getElementById(containerId);
+            
+            if (links.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="empty-text">暂无链接</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            links.forEach(link => {
+                const linkCard = document.createElement('a');
+                linkCard.className = 'link-card';
+                linkCard.href = link.url;
+                linkCard.target = '_blank';
+                linkCard.rel = 'noopener noreferrer';
+                
+                linkCard.innerHTML = `
+                    <div class="link-title">
+                        <span class="link-title-text">${link.title}</span>
+                        <i class="fas fa-external-link-alt link-icon"></i>
+                    </div>
+                    <div class="link-description">${link.description}</div>
+                `;
+                
+                container.appendChild(linkCard);
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLinkCards('organizationsList', organizations);
+            renderLinkCards('friendsList', friends);
+        });
+        
+        // 禁止右键菜单和选择文本
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字感想 - Logic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translate3d(-100%, 0, 0);
+            }
+        
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        
+        body {
+            margin: 0;
+            background:linear-gradient(
+                        to left,
+                        rgb(50, 143, 230),
+                        rgb(39, 189, 114)) ;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        .words-container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            max-height: 800px;
+            animation-duration: 1s;
+            animation-fill-mode: both;
+            animation-name: fadeInLeft;
+            background: rgba( 255, 255, 255, 0.2 );
+            box-shadow: 0 8px 32px 0 rgba( 0, 0, 0, 0.37 );
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        
+        .words-container:hover {
+            backdrop-filter: blur(11px);
+            box-shadow: 0 8px 39px 0 rgba(0, 0, 0, 0.37);
+        }
+        
+        /* 左侧文章列表样式 */
+        .articles-sidebar {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            margin-right: 20px;
+            transition: 0.3s;
+        }
+        
+        .back-btn:hover {
+            transform: translateX(-5px);
+        }
+        
+        .back-btn i {
+            margin-right: 8px;
+        }
+        
+        .header-title {
+            font-size: 24px;
+            font-weight: 300;
+            color: white;
+        }
+        
+        .articles-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .article-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .article-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .article-item.active {
+            background: rgba(255, 255, 255, 0.25);
+            border-left: 4px solid white;
+        }
+        
+        .article-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .article-date {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+        }
+        
+        .article-excerpt {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* 右侧文章内容样式 */
+        .article-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .article-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .content-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+        
+        .content-meta {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .content-date {
+            margin-right: 15px;
+        }
+        
+        .content-category {
+            background: rgba(76, 99, 210, 0.1);
+            color: #4c63d2;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .article-body {
+            flex: 1;
+            line-height: 1.7;
+            color: #444;
+            font-size: 16px;
+        }
+        
+        .article-body p {
+            margin-bottom: 20px;
+        }
+        
+        .article-body h2 {
+            font-size: 22px;
+            color: #333;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .article-body blockquote {
+            border-left: 4px solid #4c63d2;
+            background: rgba(76, 99, 210, 0.05);
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #555;
+        }
+        
+        .article-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tag {
+            background: rgba(0, 0, 0, 0.1);
+            color: #555;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .article-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .action-btn:hover {
+            color: #4c63d2;
+        }
+        
+        .action-btn i {
+            margin-right: 5px;
+        }
+        
+        /* 空状态样式 */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            text-align: center;
+        }
+        
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .empty-subtext {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .words-container {
+                flex-direction: column;
+                height: auto;
+                max-height: 90vh;
+            }
+            
+            .articles-sidebar {
+                width: 100%;
+                max-height: 40vh;
+            }
+            
+            .article-content {
+                max-height: 50vh;
+            }
+        }
+        
+        @media (max-width: 800px) {
+            .words-container {
+                box-shadow: 0 8px 39px 0 rgba(0, 0, 0, 0.37)!important;
+                margin-top: 12%!important;
+                margin-left: 5%!important;
+                margin-right: 5%!important;
+            }
+            
+            .articles-sidebar {
+                padding: 20px;
+            }
+            
+            .article-content {
+                padding: 20px;
+            }
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="words-container">
+        <!-- 左侧文章列表 -->
+        <div class="articles-sidebar">
+            <div class="header">
+                <a href="index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> 返回首页
+                </a>
+                <h1 class="header-title">文字感想</h1>
+            </div>
+            
+            <div class="articles-list" id="articlesList">
+                <!-- 文章列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+        
+        <!-- 右侧文章内容 -->
+        <div class="article-content">
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">
+                    <i class="fas fa-feather-alt"></i>
+                </div>
+                <div class="empty-text">选择一篇文章开始阅读</div>
+                <div class="empty-subtext">点击左侧文章标题查看内容</div>
+            </div>
+            
+            <div class="article-detail" id="articleDetail" style="display: none;">
+                <div class="article-header">
+                    <h1 class="content-title" id="articleTitle">文章标题</h1>
+                    <div class="content-meta">
+                        <span class="content-date" id="articleDate">2024-03-20</span>
+                        <span class="content-category" id="articleCategory">生活感悟</span>
+                    </div>
+                </div>
+                
+                <div class="article-body" id="articleBody">
+                    <!-- 文章内容将通过JavaScript动态加载 -->
+                </div>
+                
+                <div class="article-footer">
+                    <div class="article-tags" id="articleTags">
+                        <!-- 标签将通过JavaScript动态加载 -->
+                    </div>
+                    <div class="article-actions">
+                        <button class="action-btn">
+                            <i class="far fa-heart"></i> <span id="likeCount">12</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="far fa-comment"></i> <span id="commentCount">5</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 文章数据
+        const articles = [
+            {
+                id: 1,
+                title: "Test",
+                date: "2025-11-18",
+                category: "Test",
+                tags: ["AI生成", "仅用于测试"],
+                excerpt: "来到北大已经两周了，从南国到北国，从熟悉到陌生，这段旅程充满了新奇与挑战...",
+                content: `
+                    <p>来到北大已经两周了，从南国到北国，从熟悉到陌生，这段旅程充满了新奇与挑战。</p>
+                    
+                    <p>还记得第一天踏入校园时的忐忑与兴奋。未名湖的波光粼粼，博雅塔的巍峨挺拔，一切都如梦中景象。作为南方人，第一次真正体验北方的秋天，金黄的银杏叶铺满小径，踩上去沙沙作响，仿佛在诉说着这个百年学府的故事。</p>
+                    
+                    <h2>学习与探索</h2>
+                    
+                    <p>智能科学与技术专业的课程比想象中更加深入和广泛。从早八的微积分到晚九的编程实验，每一天都充实而忙碌。最令我印象深刻的是算法课上的第一次讨论，同学们思维活跃，观点新颖，让我意识到自己需要更加努力才能跟上大家的步伐。</p>
+                    
+                    <blockquote>
+                        "大学之道，在明明德，在亲民，在止于至善。" ——《大学》
+                    </blockquote>
+                    
+                    <p>图书馆成了我最常去的地方。那里不仅有丰富的藏书，更有一群志同道合的学习伙伴。每当夜深人静，独自走在回宿舍的路上，看着满天繁星，心中总会涌起一股莫名的感动。</p>
+                    
+                    <h2>生活与成长</h2>
+                    
+                    <p>离开家乡独自生活，让我学会了更多自理能力。从洗衣做饭到时间管理，每一个细节都是成长的印记。虽然偶尔会想念妈妈的拿手菜，但食堂里各式各样的北方美食也让我大开眼界。</p>
+                    
+                    <p>加入了手语社和摄影协会，认识了许多有趣的朋友。周末我们会一起去未名湖畔拍照，或者学习手语交流。这些活动不仅丰富了我的课余生活，也让我对这个世界有了更深刻的理解。</p>
+                    
+                    <p>北大，这个我曾经梦寐以求的地方，如今已成为我生活的一部分。前方的路还很长，但我相信，只要保持初心，勇敢前行，一定能在这里书写属于自己的精彩篇章。</p>
+                `,
+                likes: 12,
+                comments: 5
+            },
+        ];
+
+        // 动态生成文章列表
+        function renderArticlesList() {
+            const articlesList = document.getElementById('articlesList');
+            articlesList.innerHTML = '';
+            
+            articles.forEach((article, index) => {
+                const articleItem = document.createElement('div');
+                articleItem.className = 'article-item';
+                if (index === 0) {
+                    articleItem.classList.add('active');
+                }
+                
+                articleItem.innerHTML = `
+                    <div class="article-title">${article.title}</div>
+                    <div class="article-date">${article.date} · ${article.category}</div>
+                    <div class="article-excerpt">${article.excerpt}</div>
+                `;
+                
+                articleItem.addEventListener('click', () => showArticle(article.id));
+                articlesList.appendChild(articleItem);
+            });
+        }
+        
+        // 显示文章内容
+        function showArticle(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (!article) return;
+            
+            // 更新文章列表中的激活状态
+            document.querySelectorAll('.article-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.article-item')[articles.findIndex(a => a.id === articleId)].classList.add('active');
+            
+            // 更新文章内容
+            document.getElementById('articleTitle').textContent = article.title;
+            document.getElementById('articleDate').textContent = article.date;
+            document.getElementById('articleCategory').textContent = article.category;
+            document.getElementById('articleBody').innerHTML = article.content;
+            document.getElementById('likeCount').textContent = article.likes;
+            document.getElementById('commentCount').textContent = article.comments;
+            
+            // 更新标签
+            const tagsContainer = document.getElementById('articleTags');
+            tagsContainer.innerHTML = '';
+            article.tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.textContent = tag;
+                tagsContainer.appendChild(tagElement);
+            });
+            
+            // 显示文章详情，隐藏空状态
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('articleDetail').style.display = 'block';
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            renderArticlesList();
+            // 默认显示第一篇文章
+            if (articles.length > 0) {
+                showArticle(articles[0].id);
+            }
+        });
+        
+        // 禁止右键菜单和选择文本
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+    </script>
+</body>
+</html>
